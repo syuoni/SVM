@@ -8,9 +8,9 @@ Since a deeply vectorized impelementation of Sequential Minimal Optimization(SMO
 
 --------
 
-To use this package, simply do::
+To use this package, do::
 
     >>> from SVM import SVM
     >>> svm = SVM()
     >>> predictor = svm._construct_predictor(y, X, method='smo')
-    >>> predictor.predict(x)
+    >>> predictor.predict(x_test)
