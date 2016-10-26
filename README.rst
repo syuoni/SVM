@@ -1,5 +1,4 @@
-=======
- SVM
+# SVM
 =======
 
 A implementation of Support Vector Machine(SVM) with Python. 
@@ -13,4 +12,4 @@ To use this package, do::
     >>> from SVM import SVM
     >>> svm = SVM()
     >>> predictor = svm._construct_predictor(y, X, method='smo')
-    >>> predictor.predict(x_test)
+    >>> predictor.predict(x_test)
