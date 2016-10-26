@@ -10,7 +10,7 @@ By syuoni (https://github.com/syuoni)
 
 A implementation of Support Vector Machine (SVM) with Python. 
 
-Since a deeply vectorized impelementation of Sequential Minimal Optimization (SMO) algrithm, the solution is quite fast. 
+Since a deeply vectorized impelementation of Sequential Minimal Optimization (SMO) algrithm, the computation is quite fast. An alternative optimization method of SLSQP (from scipy) is provided. 
 
 --------------
  Demonstration
