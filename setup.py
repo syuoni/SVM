@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(name             = 'SVM',
       version          = '0.3',
-      description      = 'A implementation of Support Vector Machine(SVM) with Python',
+      description      = 'A implementation of Support Vector Machine (SVM) with Python',
       long_description = open('README.rst').read(),
       url              = 'https://github.com/syuoni/SVM',
       author           = 'syuoni',
