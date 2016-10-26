@@ -1,13 +1,23 @@
+=======
  SVM
 =======
+
+By syuoni (https://github.com/syuoni)
+
+--------------
+ Introduction
+--------------
 
 A implementation of Support Vector Machine (SVM) with Python. 
 
 Since a deeply vectorized impelementation of Sequential Minimal Optimization (SMO) algrithm, the solution is quite fast. 
 
---------
+--------------
+ Demonstration
+--------------
+For example,
 
-To use this package, do::
+::
 
     >>> from SVM import SVM
     >>> svm = SVM()
