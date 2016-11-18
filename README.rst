@@ -21,5 +21,5 @@ For example,
 
     >>> from SVM import SVM, VecKernel
     >>> svm = SVM(SVM(kernel_gram=VecKernel.gaussian())
-    >>> predictor = svm._construct_predictor(y, X, method='smo')
+    >>> predictor = svm.construct_predictor(y, X, method='smo')
     >>> predictor.predict(x_test)
