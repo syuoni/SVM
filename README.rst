@@ -19,7 +19,7 @@ For example,
 
 ::
 
-    >>> from SVM import SVM, VecKernel
-    >>> svm = SVM(SVM(kernel_gram=VecKernel.gaussian())
+    >>> from SVM import SVM
+    >>> svm = SVM()
     >>> predictor = svm._construct_predictor(y, X, method='smo')
     >>> predictor.predict(x_test)
