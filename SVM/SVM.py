@@ -58,8 +58,19 @@ class SVM(object):
                        method='SLSQP')
         return res.x
     
-    def _calc_multipliers_smo(self, y, X):
-        m, n = X.shape
+    def _calc_multipliers_smo(self, y, X, max_iter=1000, error_tol=5e-4, max_d_error=5, valid_ratio=0.3):       
+        if 0 < valid_ratio < 1:
+            m, n = X.shape
+            sep = round(m * (1 - valid_ratio))
+            X_valid = X[sep:]
+            y_valid = y[sep:]
+            X = X[:sep]
+            y = y[:sep]
+        else:
+            X_valid = X
+            y_valid = y
+            
+        m, n = X.shape        
         gram = self._kernel_gram(X, X)
         eta = self._calc_eta(gram)
         
@@ -67,7 +78,13 @@ class SVM(object):
         alpha = np.zeros(m)
         b = 0
         
-        for _ in range(5000):   
+        n_iter = 0
+        best_alpha = alpha
+        min_error_rate = 1.0
+        n_d_error = 0
+        stop_flag = False
+        
+        while True:   
             alpha_eq0_indic = alpha < self._alpha_tol
             alpha_eqC_indic = alpha > self._C-self._alpha_tol
             alpha_02C_indic = -(alpha_eq0_indic | alpha_eqC_indic)
@@ -78,10 +95,6 @@ class SVM(object):
             g = np.sum(alpha[-alpha_eq0_indic] * y[-alpha_eq0_indic] * sp_gram.T, axis=1) + b
             E = g - y
             yg = y * g
-            
-#            if not _ % 500:
-#                y_hat = np.sign(g)
-#                print _, np.sum(y==y_hat)
             
             yg_lw1_indic = yg <= 1-self._g_tol
             yg_up1_indic = yg >= 1+self._g_tol
@@ -147,14 +160,47 @@ class SVM(object):
             # update alpha
             alpha[i] = alpha_i
             alpha[j] = alpha_j
-        
-        return alpha
+            
+            # Validation
+            sp_indic = alpha > self._alpha_tol
+            sp_alpha = alpha[sp_indic]
+            sp_X = X[sp_indic]
+            sp_y = y[sp_indic]
+            
+            pred = SVMPredictor(self._kernel_gram, sp_alpha, sp_X, sp_y, b)
+            error_rate = pred.calc_erorr_rate(y_valid, X_valid)
+            if error_rate < min_error_rate:
+                if min_error_rate - error_rate < error_tol:
+                    n_d_error += 1
+                    if n_d_error >= max_d_error:
+                        stop_flag = True
+                else:
+                    n_d_error = 0
+                    
+                best_alpha = alpha
+                min_error_rate = error_rate
+                
+            n_iter += 1
+            if n_iter >= max_iter:
+                stop_flag = True
+            
+            if (not n_iter % (max_iter / 10)) or n_iter == max_iter:
+                print n_iter, min_error_rate
+            
+            if stop_flag:
+                break
+
+        return best_alpha
     
     
-    def _construct_predictor(self, y, X, method='smo'):
+    def construct_predictor(self, y, X, method='smo', smo_option=None):
         method = method.lower()
         if method == 'smo':
-            alpha = self._calc_multipliers_smo(y, X)
+            if smo_option is None:
+                alpha = self._calc_multipliers_smo(y, X)
+            else:
+                alpha = self._calc_multipliers_smo(y, X, **smo_option)
+            
         elif method == 'slsqp':
             alpha = self._calc_multipliers_slsqp(y, X)
         else:

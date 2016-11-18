@@ -4,8 +4,7 @@ import pandas as pd
 import time
 import matplotlib.pyplot as plt
 import seaborn as sns
-from SVM import SVM
-from VecKernel import VecKernel
+from SVM import SVM, VecKernel
 
 def demo():
     svm = SVM(kernel_gram=VecKernel.linear())
@@ -41,13 +40,13 @@ def demo():
     print 'Error for reality:', (np.sum((np.where(real_bound > 0, 1, -1) != y)) + 0.0) / n
     
     t0 = time.time()
-    predictor0 = svm._construct_predictor(y, X, method='slsqp')
+    predictor0 = svm.construct_predictor(y, X, method='slsqp')
     t1 = time.time()
     print 'Time for slsqp:', t1 - t0
     print 'Error for slsqp:', predictor0.calc_erorr_rate(y, X)
     
     t0 = time.time()
-    predictor1 = svm._construct_predictor(y, X, method='smo')
+    predictor1 = svm.construct_predictor(y, X, method='smo')
     t1 = time.time()
     print 'Time for smo:', t1 - t0
     print 'Error for smo:', predictor1.calc_erorr_rate(y, X)
